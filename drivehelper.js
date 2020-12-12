@@ -2,35 +2,46 @@ const client = require('axios');
 const cheerio = require('cheerio');
 
 async function loadGamePlays(gameId) {
-  const { data } = await client.get('https://www.espn.com/nfl/playbyplay?gameId=' + gameId);
-  
+  const { data } = await client.get('https://www.espn.com/college-football/playbyplay?gameId=' + gameId, {
+    timeout: 30000
+  });
+
   const gameplaysHtml = getHtml(data, '#gamepackage-drives-wrap');
   return gameplaysHtml;
 }
 
 
 function getHtml(htmlString, selector) {
-  const $ = cheerio.load(htmlString);
-  return $(selector).html();
+  if (htmlString) {
+    const $ = cheerio.load(htmlString);
+    return $(selector).html();
+  }
+  return '';
 }
 
 function getValue(htmlString, selector) {
-  const $ = cheerio.load(htmlString, {
-    normalizeWhitespace: true,
-    xmlMode: true
-  });
-  var value = $(selector);
-  return value.text();
+  if (htmlString) {
+    const $ = cheerio.load(htmlString, {
+      normalizeWhitespace: true,
+      xmlMode: true
+    });
+    var value = $(selector);
+    return value.text();
+  }
+  return '';
 }
 
 function getAttributeValue(htmlString, selector, attribute) {
-  const $ = cheerio.load(htmlString, {
-    normalizeWhitespace: true,
-    xmlMode: true
-  });
+  if (htmlString) {
+    const $ = cheerio.load(htmlString, {
+      normalizeWhitespace: true,
+      xmlMode: true
+    });
 
-  var value = $(selector).attr(attribute);
-  return value;
+    var value = $(selector).attr(attribute);
+    return value;
+  }
+  return '';
 }
 
 async function getBigPlays(gameId) {
@@ -74,7 +85,7 @@ async function getBigPlays(gameId) {
       plays('li').each(function (idx, element) {
         var play = getValue(element, 'span.post-play');
         var yards = parseInt(getYardage(play));
-        if (yards > 0) {          
+        if (yards > 0) {
           if (play.toLowerCase().includes('pass') && yards >= 15) {
             pass++;
           } else {

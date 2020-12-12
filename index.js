@@ -3,11 +3,22 @@ const matchupHelper = require('./matchuphelper.js');
 const scoreboardHelper = require('./scoreboardhelper.js');
 const driveHelper = require('./drivehelper.js');
 
-const weekNumber = '12';
-const outputDirectory = '/mnt/c/data/json/';
+const weekNumber = process.argv[2];
+const groupId = process.argv[3];
+const outputDirectory = '/mnt/c/data/json/college/';
 
 console.log('Building Stats for Week ' + weekNumber);
-scoreboardHelper.loadScoreData(weekNumber, processScoreBoard);
+scoreboardHelper.loadScoreData(weekNumber, groupId, processScoreBoard)
+/*
+scoreboardHelper.getConferences().then((groups) => {
+  groups.forEach(groupId => {
+    setTimeout(scoreboardHelper.loadScoreData(weekNumber, groupId, processScoreBoard), 15000);
+  });
+}).catch((err) => console.log(err));
+*/
+
+
+//scoreboardHelper.loadScoreData(weekNumber, processScoreBoard);
 
 async function processScoreBoard(scoreboard) {
   var i;
@@ -27,6 +38,7 @@ async function buildItem(item) {
   var gameId = item.id;
   gamestats.id = item.id;
   gamestats.game = item;
+  gamestats.groupId = groupId;
 
   const pass = boxscoreHelper.getPassingTotals(gameId);
   pass.then(v => boxscore.passing = v).catch((error) => console.log(gameId + '-PASSING TOTALS: ' + error))
