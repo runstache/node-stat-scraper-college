@@ -1,0 +1,24 @@
+{
+  "name": "stat-scraper-college",
+  "version": "1.0.0",
+  "description": "Node College scrapper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/runstache/node-stat-scraper-college.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/runstache/node-stat-scraper-college/issues"
+  },
+  "homepage": "https://github.com/runstache/node-stat-scraper-college#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "cheerio": "^1.0.0-rc.3",
+    "jsdom": "^16.4.0"
+  }
+}
